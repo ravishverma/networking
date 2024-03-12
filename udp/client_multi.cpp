@@ -19,7 +19,7 @@ void error(const char *msg) {
 }
 
 void start_reading(int &count, int &sockfd,
-                    int packetSize, int packetCount, std::mutex &mtx) {
+                    int packetSize, std::mutex &mtx) {
     int n_recv;
     char buf[packetSize];
 
@@ -52,9 +52,7 @@ void start_reading(int &count, int &sockfd,
 
 int main() {
     int port = 6000;
-    int MAXSIZE = 65535;
     int packetSize = 256;
-    int packetCount = 2*MAXSIZE/packetSize;
 
     int sockfd;
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -79,9 +77,9 @@ int main() {
 
     std::vector<std::thread> threads;
 
-    for (int i=0; i<10; i++) {
+    for (int i=0; i<5; i++) {
         threads.push_back(std::thread(start_reading, std::ref(count), std::ref(sockfd),
-                                        packetSize, packetCount, std::ref(mtx)));
+                                        packetSize, std::ref(mtx)));
     }
 
     for (auto &t: threads) {

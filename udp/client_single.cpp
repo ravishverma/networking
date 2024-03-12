@@ -18,9 +18,7 @@ void error(const char *msg) {
 
 int main() {
     int port = 6000;
-    int MAXSIZE = 65535;
     int packetSize = 256;
-    int packetCount = 2*MAXSIZE/packetSize;
 
     int sockfd;
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
