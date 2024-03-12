@@ -52,10 +52,10 @@ int main() {
 
         count++;
 
-        std::cout << "Count : " << count << std::endl;
         std::this_thread::sleep_for(1ms);
     }
 
+    std::cout << "Total sent count : " << count << std::endl;
     close(sockfd);
     return 0;
 }

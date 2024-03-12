@@ -19,8 +19,8 @@ void error(const char *msg) {
 int main() {
     int port = 6000;
     int MAXSIZE = 65535;
-    int FLOODSIZE = 256;
-    int FLOODCOUNT = 2*MAXSIZE/FLOODSIZE;
+    int packetSize = 256;
+    int packetCount = 2*MAXSIZE/packetSize;
 
     int sockfd;
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -38,21 +38,33 @@ int main() {
         error("ERROR binding socket to address");
     }
 
-    int n;
+    int n_recv;
     int count = 0;
 
-    char buf[FLOODSIZE];
+    char buf[packetSize];
 
     using namespace std::chrono_literals;
-    while (count<FLOODCOUNT) {
-        n = recvfrom(sockfd, buf, FLOODSIZE,
-                    0, (struct sockaddr*) &serv_addr, &addr_len);
-        count++;
+    
+    bool started = false;
+    while (true) {
+        n_recv = recvfrom(sockfd, buf, packetSize,
+                    MSG_DONTWAIT, (struct sockaddr*) &serv_addr, &addr_len);
 
-        std::cout << "Count : " << count << std::endl;
+        if (n_recv<0) {
+            if (started) {
+                break;
+            }
+        } else {
+            if (!started) {
+                started = true;
+            }
+            count++;
+        }
+
         std::this_thread::sleep_for(5ms);
     }
 
+    std::cout << "Single threaded client receive count : " << count << std::endl;
     close(sockfd);
     return 0;
 }
