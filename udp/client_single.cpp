@@ -59,7 +59,8 @@ int main() {
             count++;
         }
 
-        std::this_thread::sleep_for(5ms);
+        // Fake process that takes time to complete
+        std::this_thread::sleep_for(50ms);
     }
 
     std::cout << "Single threaded client receive count : " << count << std::endl;

@@ -45,6 +45,7 @@ void start_reading(std::atomic<int> &count, int &sockfd,
             count++;
         }
 
+        // Fake process that takes time to complete
         std::this_thread::sleep_for(50ms);
     }
 }
